@@ -1,6 +1,7 @@
 package cn.dao.impl;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.dbutils.QueryRunner;
@@ -10,6 +11,7 @@ import org.apache.commons.dbutils.handlers.BeanListHandler;
 import cn.dao.StudentDao;
 import cn.domain.Student;
 import cn.utils.JDBCUtil;
+import cn.utils.TextUtils;
 
 /*
  * 这是StudentDao的实现，针对前面定义的规范，做出具体的实现
@@ -33,6 +35,32 @@ public class StudentDaoImpl implements StudentDao {
 		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
 		String sql = "select * from students where sid=?";
 		return runner.query(sql, new BeanHandler<Student>(Student.class), sid);
+	}
+
+	// 模糊查询
+	@Override
+	public List<Student> serarchstudent(String sname, String gender) throws SQLException {
+		// TODO Auto-generated method stub
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+
+		String sql = "select * from students where 1=1 ";
+		List<String> list = new ArrayList<String>();
+
+		// 判断有没有姓名， 如果有，就组拼到sql语句里面
+		if (!TextUtils.isEmpty(sname)) {
+			sql = sql + "  and sname like ?";
+			list.add("%" + sname + "%");
+		}
+
+		// 判断有没有性别，有的话，就组拼到sql语句里面。
+		if (!TextUtils.isEmpty(gender)) {
+			sql = sql + " and gender = ?";
+			list.add(gender);
+		}
+
+		// String sql = "SELECT *FROM students WHERE sname=? OR gender=?;";
+		List<Student> li = runner.query(sql, new BeanListHandler<Student>(Student.class), list.toArray());
+		return li;
 	}
 
 	// 增加学生对象

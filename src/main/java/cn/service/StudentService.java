@@ -15,6 +15,9 @@ public interface StudentService {
 	// 查询单个学生信息，返回Student类型
 	Student findstudentbyid(int sid) throws SQLException;
 
+	// 模糊查询
+	List<Student> serarchstudent(String sname, String gender) throws SQLException;
+
 	// 添加学生数据
 	void insertstudents(Student stus) throws SQLException;
 

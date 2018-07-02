@@ -28,6 +28,12 @@ public class StudnetServiceImpl implements StudentService {
 		return dao.findstudentbyid(sid);
 	}
 
+	// 模糊查询
+	public List<Student> serarchstudent(String sname, String gender) throws SQLException {
+		StudentDao dao = new StudentDaoImpl();
+		return dao.serarchstudent(sname, gender);
+	}
+
 	@Override
 	public void insertstudents(Student stus) throws SQLException {
 		StudentDao dao = new StudentDaoImpl();
